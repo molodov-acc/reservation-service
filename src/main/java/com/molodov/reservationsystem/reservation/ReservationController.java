@@ -39,7 +39,7 @@ public class ReservationController {
             @RequestParam(name = "pageNumber", required = false) Integer pageNumber
     ) {
         var filter = new ReservationSearchFilter(roomId, userId, pageSize, pageNumber);
-        log.info("called getAll reservation");
+        log.info("called searchByFilter");
         List<Reservation> reservations = reservationService.searchByFilter(filter);
 
         return ResponseEntity.ok(reservations);
@@ -50,7 +50,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> getReservationById(
             @PathVariable("id") Long id
     ) {
-        log.info("called getAll reservation");
+        log.info("called getReservationById id={}", id);
         Reservation reservation = reservationService.getById(id);
 
         return ResponseEntity.ok(reservation);
