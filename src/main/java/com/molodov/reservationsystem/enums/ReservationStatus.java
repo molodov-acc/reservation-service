@@ -1,4 +1,4 @@
-package com.molodov.reservationsystem.reservation;
+package com.molodov.reservationsystem.enums;
 
 /**
  * enum — это специальный тип в Java,

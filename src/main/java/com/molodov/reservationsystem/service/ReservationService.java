@@ -1,41 +1,32 @@
-package com.molodov.reservationsystem.reservation;
+package com.molodov.reservationsystem.service;
 
 import com.molodov.notification.grpc.NotificationServiceGrpc;
 import com.molodov.notification.grpc.ReservationCancelledRequest;
-import com.molodov.reservationsystem.reservation.event.ReservationCreatedEvent;
+import com.molodov.reservationsystem.dto.ReservationSearchFilter;
+import com.molodov.reservationsystem.entity.ReservationEntity;
+import com.molodov.reservationsystem.enums.ReservationStatus;
+import com.molodov.reservationsystem.integration.kafka.ReservationProducer;
+import com.molodov.reservationsystem.mapper.ReservationMapper;
+import com.molodov.reservationsystem.model.Reservation;
+import com.molodov.reservationsystem.repository.ReservationRepository;
+import com.molodov.reservationsystem.event.ReservationCreatedEvent;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.grpc.client.GrpcChannelFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class ReservationService {
-    private static final Logger log = LoggerFactory.getLogger(ReservationService.class);
     private final ReservationProducer reservationProducer;
     private final ReservationRepository repository;
     private final ReservationMapper reservationMapper;
     private final NotificationServiceGrpc.NotificationServiceBlockingStub notificationStub;
-
-    public ReservationService(
-            ReservationProducer reservationProducer,
-            ReservationRepository repository,
-            ReservationMapper reservationMapper,
-            GrpcChannelFactory channelFactory
-    ) {
-        this.reservationProducer = reservationProducer;
-        this.repository = repository;
-        this.reservationMapper = reservationMapper;
-
-        this.notificationStub = NotificationServiceGrpc.newBlockingStub(
-                //channelFactory.createChannel("notification-service")
-                channelFactory.createChannel("static://localhost:9090")
-        );
-    }
 
     public List<Reservation> getAllReservation() {
         return repository.findAll().stream()
@@ -91,25 +82,40 @@ public class ReservationService {
         return savedReservation;
     }
 
-    public Reservation reservationUpdate(Long id, Reservation reservationToUpdate) {
+    @Transactional
+    public Reservation reservationUpdate(
+            Long id,
+            Reservation reservationToUpdate
+    ) {
         var reservationEntity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("нет такого бронирования" + id));
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Нет такого бронирования: " + id
+                        )
+                );
 
         if (reservationEntity.getStatus() != ReservationStatus.PENDING) {
-            throw new IllegalStateException("не можем изменить бронирование со статусом" + reservationEntity.getStatus());
+            throw new IllegalStateException(
+                    "Не можем изменить бронирование со статусом: "
+                            + reservationEntity.getStatus()
+            );
         }
-        if (!reservationEntity.getEndDate().isAfter(reservationEntity.getStartDate())) {
-            throw new IllegalArgumentException("Start date must be 1 day earlier than endDate");
+
+        reservationMapper.updateEntity(
+                reservationToUpdate,
+                reservationEntity
+        );
+
+        if (reservationEntity.getStartDate() == null
+                || reservationEntity.getEndDate() == null
+                || !reservationEntity.getEndDate()
+                .isAfter(reservationEntity.getStartDate())) {
+            throw new IllegalArgumentException(
+                    "Дата окончания должна быть позже даты начала"
+            );
         }
 
-
-        var reservationToSave = reservationMapper.toReservationEntity(reservationToUpdate);
-        reservationToSave.setId(reservationEntity.getId());
-        reservationToSave.setStatus(ReservationStatus.PENDING);
-
-        var updatedReservation = repository.save(reservationToSave);
-
-        return reservationMapper.toDomainReservation(updatedReservation);
+        return reservationMapper.toDomainReservation(reservationEntity);
     }
 
     @Transactional
@@ -148,6 +154,4 @@ public class ReservationService {
         log.info("Успешная отмена бронирования");
 
     }
-
-
 }

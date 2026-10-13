@@ -1,4 +1,4 @@
-package com.molodov.reservationsystem.reservation;
+package com.molodov.reservationsystem.dto;
 
 public record ReservationSearchFilter(
         Long roomId,

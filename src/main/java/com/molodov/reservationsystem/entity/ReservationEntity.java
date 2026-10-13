@@ -1,5 +1,6 @@
-package com.molodov.reservationsystem.reservation;
+package com.molodov.reservationsystem.entity;
 
+import com.molodov.reservationsystem.enums.ReservationStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package com.molodov.reservationsystem.config;
+package com.molodov.reservationsystem.integration.kafka;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

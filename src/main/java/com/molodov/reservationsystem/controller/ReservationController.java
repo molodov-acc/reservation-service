@@ -1,5 +1,8 @@
-package com.molodov.reservationsystem.reservation;
+package com.molodov.reservationsystem.controller;
 
+import com.molodov.reservationsystem.model.Reservation;
+import com.molodov.reservationsystem.dto.ReservationSearchFilter;
+import com.molodov.reservationsystem.service.ReservationService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

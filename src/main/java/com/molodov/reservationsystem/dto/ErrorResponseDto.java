@@ -1,4 +1,4 @@
-package com.molodov.reservationsystem.web;
+package com.molodov.reservationsystem.dto;
 
 import java.time.LocalDateTime;
 

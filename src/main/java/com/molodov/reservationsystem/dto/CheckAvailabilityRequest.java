@@ -1,4 +1,4 @@
-package com.molodov.reservationsystem.reservation.availability;
+package com.molodov.reservationsystem.dto;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -8,6 +8,5 @@ public record CheckAvailabilityRequest(
         @NotNull Long roomId,
         @NotNull LocalDate startDate,
         @NotNull LocalDate endDate
-
 ) {
 }

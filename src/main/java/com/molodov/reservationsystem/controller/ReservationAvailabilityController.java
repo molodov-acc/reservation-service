@@ -1,9 +1,12 @@
-package com.molodov.reservationsystem.reservation.availability;
+package com.molodov.reservationsystem.controller;
 
+import com.molodov.reservationsystem.enums.AvailabilityStatus;
+import com.molodov.reservationsystem.dto.CheckAvailabilityRequest;
+import com.molodov.reservationsystem.dto.CheckAvailabilityResponse;
+import com.molodov.reservationsystem.service.ReservationAvailabilityService;
 import jakarta.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,14 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/reservation/availability")
+@RequiredArgsConstructor
+@Slf4j
 public class ReservationAvailabilityController {
-    private static final Logger log = LoggerFactory.getLogger(ReservationAvailabilityController.class);
-
     private final ReservationAvailabilityService reservationAvailabilityService;
-
-    public ReservationAvailabilityController(ReservationAvailabilityService reservationAvailabilityService) {
-        this.reservationAvailabilityService = reservationAvailabilityService;
-    }
 
     @PostMapping("/check")
     public ResponseEntity<CheckAvailabilityResponse> checkAvailability(
@@ -45,5 +44,4 @@ public class ReservationAvailabilityController {
 
         return ResponseEntity.status(200).body(new CheckAvailabilityResponse(message, status));
     }
-
 }

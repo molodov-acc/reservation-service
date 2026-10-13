@@ -1,4 +1,4 @@
-package com.molodov.reservationsystem.reservation.event;
+package com.molodov.reservationsystem.event;
 
 import java.time.LocalDate;
 

@@ -1,25 +1,17 @@
-package com.molodov.reservationsystem.reservation;
+package com.molodov.reservationsystem.integration.kafka;
 
-
-import com.molodov.reservationsystem.reservation.event.ReservationCancelledEvent;
-import com.molodov.reservationsystem.reservation.event.ReservationCreatedEvent;
+import com.molodov.reservationsystem.event.ReservationCancelledEvent;
+import com.molodov.reservationsystem.event.ReservationCreatedEvent;
+import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationProducer {
-
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
-
-    public ReservationProducer(
-            KafkaTemplate<String, String> kafkaTemplate,
-            ObjectMapper objectMapper
-    ) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.objectMapper = objectMapper;
-    }
 
     public void sendReservationCreated(ReservationCreatedEvent event) {
 

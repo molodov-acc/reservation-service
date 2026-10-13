@@ -1,5 +1,6 @@
-package com.molodov.reservationsystem.reservation;
+package com.molodov.reservationsystem.model;
 
+import com.molodov.reservationsystem.enums.ReservationStatus;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;

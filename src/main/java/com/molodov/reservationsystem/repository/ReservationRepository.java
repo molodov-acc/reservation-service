@@ -1,5 +1,7 @@
-package com.molodov.reservationsystem.reservation;
+package com.molodov.reservationsystem.repository;
 
+import com.molodov.reservationsystem.entity.ReservationEntity;
+import com.molodov.reservationsystem.enums.ReservationStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

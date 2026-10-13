@@ -1,5 +1,7 @@
-package com.molodov.reservationsystem.reservation;
+package com.molodov.reservationsystem.mapper;
 
+import com.molodov.reservationsystem.entity.ReservationEntity;
+import com.molodov.reservationsystem.model.Reservation;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,5 +42,15 @@ public class ReservationMapper {
                 entity.endDate(),
                 entity.status()
         );
+    }
+
+    public void updateEntity(
+            Reservation source,
+            ReservationEntity target
+    ) {
+        target.setRoomId(source.roomId());
+        target.setUserId(source.userId());
+        target.setStartDate(source.startDate());
+        target.setEndDate(source.endDate());
     }
 }
